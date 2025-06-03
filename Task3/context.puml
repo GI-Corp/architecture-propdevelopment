@@ -1,0 +1,27 @@
+@startuml PropDevelopment Smart System — Context Diagram
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Container.puml
+title PropDevelopment Smart System — Context Diagram
+
+top to bottom direction
+
+Person(user, "Собственник", "Житель/пользователь умного дома")
+
+System_Ext(SmartIntercom, "Smart Intercom", "Face recognition for door access")
+System_Ext(SmartBarrier, "Smart Barrier", "License plate recognition for vehicle access")
+
+System(MobileApp, "Mobile App", "Mobile interface for residents to manage smart services")
+System(SmartCoreSystem, "Smart Core System", "Core logic and orchestration for smart services")
+
+ContainerDb(Database, "Smart Home DB", "Stores resident profiles and access rights", "PostgreSQL")
+
+Rel(user, MobileApp, "Manages smart services", "HTTPS + OAuth 2.0")
+Rel(MobileApp, SmartCoreSystem, "Sends service requests", "HTTPS + OAuth 2.0")
+
+Rel(SmartCoreSystem, Database, "Reads/Writes resident data", "SQL")
+Rel(SmartCoreSystem, SmartIntercom, "Triggers door access", "HTTPS")
+Rel(SmartCoreSystem, SmartBarrier, "Triggers barrier access", "HTTPS")
+
+Rel(SmartIntercom, SmartCoreSystem, "Reports face recognition", "HTTPS")
+Rel(SmartBarrier, SmartCoreSystem, "Reports license plate", "HTTPS")
+
+@enduml
